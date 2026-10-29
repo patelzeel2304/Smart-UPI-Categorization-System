@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Expense Categories | Smart UPI</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="dashboard-navbar">
+
+<div class="logo">
+
+<i class="fa-solid fa-wallet"></i>
+
+<span>Smart UPI</span>
+
+</div>
+
+<ul>
+
+<!--<li><a href="{{ url_for('home') }}">Home</a></li>
+
+<li><a href="{{ url_for('analyze') }}">Analyze</a></li>
+
+<li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+
+<li><a class="active" href="{{ url_for('categories') }}">Database</a></li><li><a href="{{ url_for('logout') }}">Logout</a></li>
+
+</ul> -->
+
+ <ul>
+        <li><a class="active" href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('analyze') }}">Analyze</a></li>
+        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('categories') }}">Database</a></li>
+        <!--<li><a href="{{ url_for('about') }}">About</a></li>-->
+        <li><a class="logout-link" href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+
+</nav>
+
+<!-- ================= HEADER ================= -->
+
+<section class="category-header">
+
+<h1>
+
+<i class="fa-solid fa-layer-group"></i>
+
+Expense Categories
+
+</h1>
+
+<p>
+
+All your UPI transactions are automatically grouped using NLP.
+Each category displays the transactions belonging to it.
+
+</p>
+
+</section>
+
+<!-- ================= FOOD ================= -->
+
+<section class="category-card food-card">
+
+<div class="category-title">
+
+<i class="fa-solid fa-bowl-food"></i>
+
+<h2>Food</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Description</th>
+<th>Merchant</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if food %}
+
+{% for row in food %}
+
+<tr>
+
+<td>{{ row.description }}</td>
+
+<td>{{ row.merchant }}</td>
+
+<td>₹{{ row.amount }}</td>
+
+<td>{{ row.date }}</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="4" class="empty-row">
+
+No Food Transactions
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</section>
+
+<!-- ================= SHOPPING ================= -->
+
+<section class="category-card shopping-card">
+
+<div class="category-title">
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+<h2>Shopping</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Description</th>
+<th>Merchant</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if shopping %}
+
+{% for row in shopping %}
+
+<tr>
+
+<td>{{ row.description }}</td>
+
+<td>{{ row.merchant }}</td>
+
+<td>₹{{ row.amount }}</td>
+
+<td>{{ row.date }}</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="4" class="empty-row">
+
+No Shopping Transactions
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</section>
+
+<!-- ================= TRAVEL ================= -->
+
+<section class="category-card travel-card">
+
+<div class="category-title">
+
+<i class="fa-solid fa-car"></i>
+
+<h2>Travel</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Description</th>
+<th>Merchant</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if travel %}
+
+{% for row in travel %}
+
+<tr>
+
+<td>{{ row.description }}</td>
+
+<td>{{ row.merchant }}</td>
+
+<td>₹{{ row.amount }}</td>
+
+<td>{{ row.date }}</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="4" class="empty-row">
+
+No Travel Transactions
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</section>
+<!-- ================= BILLS ================= -->
+
+<section class="category-card bills-card">
+
+<div class="category-title">
+
+<i class="fa-solid fa-file-invoice-dollar"></i>
+
+<h2>Bills</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Description</th>
+<th>Merchant</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if bills %}
+
+{% for row in bills %}
+
+<tr>
+
+<td>{{ row.description }}</td>
+
+<td>{{ row.merchant }}</td>
+
+<td>₹{{ row.amount }}</td>
+
+<td>{{ row.date }}</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="4" class="empty-row">
+
+No Bills Transactions
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</section>
+
+
+<!-- ================= ENTERTAINMENT ================= -->
+
+<section class="category-card entertainment-card">
+
+<div class="category-title">
+
+<i class="fa-solid fa-film"></i>
+
+<h2>Entertainment</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Description</th>
+<th>Merchant</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if entertainment %}
+
+{% for row in entertainment %}
+
+<tr>
+
+<td>{{ row.description }}</td>
+
+<td>{{ row.merchant }}</td>
+
+<td>₹{{ row.amount }}</td>
+
+<td>{{ row.date }}</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="4" class="empty-row">
+
+No Entertainment Transactions
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</section>
+
+
+<!-- ================= OTHERS ================= -->
+
+<section class="category-card others-card">
+
+<div class="category-title">
+
+<i class="fa-solid fa-box"></i>
+
+<h2>Others</h2>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Description</th>
+<th>Merchant</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if others %}
+
+{% for row in others %}
+
+<tr>
+
+<td>{{ row.description }}</td>
+
+<td>{{ row.merchant }}</td>
+
+<td>₹{{ row.amount }}</td>
+
+<td>{{ row.date }}</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="4" class="empty-row">
+
+No Other Transactions
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</section>
+
+
+<!-- ================= DATABASE VIEW ================= -->
+<section class="database-view">
+    <div class="database-heading">
+        <div>
+            <h2><i class="fa-solid fa-database"></i> Stored Transaction Database</h2>
+            <p>All transactions for <strong>{{ user_name }}</strong> are stored in the SQLite database file <strong>transactions.db</strong>.</p>
+        </div>
+        <span class="db-badge">{{ all_transactions|length }} Records</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Description</th><th>Amount</th><th>Merchant</th><th>Category</th><th>Confidence</th><th>Cleaned Text</th><th>Keywords</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+            {% if all_transactions %}
+                {% for row in all_transactions %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.description }}</td>
+                    <td>₹{{ row.amount }}</td>
+                    <td>{{ row.merchant }}</td>
+                    <td><span class="category">{{ row.category }}</span></td>
+                    <td>{{ row.confidence or 'N/A' }}</td>
+                    <td>{{ row.cleaned_text or 'N/A' }}</td>
+                    <td>{{ row.keywords or 'N/A' }}</td>
+                    <td>{{ row.date }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="9" class="empty-row">No database records found. Analyze a transaction first.</td></tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ================= SUMMARY ================= -->
+
+<section class="category-summary">
+
+<div class="summary-card-category">
+
+<i class="fa-solid fa-layer-group"></i>
+
+<h3>Categories</h3>
+
+<p>
+
+Transactions are automatically classified into Food,
+Shopping, Travel, Bills, Entertainment and Others
+using Natural Language Processing (NLP).
+
+</p>
+
+</div>
+
+<div class="summary-card-category">
+
+<i class="fa-solid fa-brain"></i>
+
+<h3>AI Classification</h3>
+
+<p>
+
+The Smart UPI system predicts the most suitable
+expense category based on the transaction description.
+
+</p>
+
+</div>
+
+<div class="summary-card-category">
+
+<i class="fa-solid fa-chart-pie"></i>
+
+<h3>Expense Analysis</h3>
+
+<p>
+
+View all transactions category-wise for better
+financial planning and spending analysis.
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+<p>
+
+© 2026 Smart UPI Expense Categorization System
+
+</p>
+
+<p>
+
+Developed using Flask • Python • SQLite • NLTK
+
+</p>
+
+</footer>
+
+</body>
+
+</html>

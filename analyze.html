@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analyze Transaction | Smart UPI Expense Categorization System</title>
+
+    <!-- CSS -->
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
+    <!-- <link rel="stylesheet" href="../static/style.css"> -->
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-wallet"></i>
+
+            <span>Smart UPI</span>
+
+        </div>
+
+        <!--<ul>
+
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+
+            <li><a href="{{ url_for('categories') }}">Database</a></li>
+
+            <li><a href="{{ url_for('about') }}">About</a></li>
+
+            <li><a href="{{ url_for('contact') }}">Contact</a></li><li><a class="logout-link" href="{{ url_for('logout') }}">Logout</a></li>
+
+        </ul>-->
+
+         <ul>
+        <li><a class="active" href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('analyze') }}">Analyze</a></li>
+        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('categories') }}">Database</a></li>
+        <!--<li><a href="{{ url_for('about') }}">About</a></li>-->
+        <li><a class="logout-link" href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+
+    </nav>
+
+
+
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="analyze-hero">
+
+        <div class="hero-left">
+
+            <p class="tag">
+
+                <i class="fa-solid fa-brain"></i>
+
+                AI Powered NLP Analysis
+
+            </p>
+
+            <h1>
+
+                Analyze Your <br>
+
+                <span>UPI Transaction</span>
+
+            </h1>
+
+            <p class="hero-text">
+
+                Enter your UPI transaction description and let our
+                NLP engine automatically detect keywords,
+                classify expenses, and generate intelligent
+                financial insights.
+
+            </p>
+
+        </div>
+
+
+
+
+
+        <!-- Floating Card -->
+
+        <div class="hero-right">
+
+            <div class="glass-card">
+
+                <h3>
+
+                    <i class="fa-solid fa-bolt"></i>
+
+                    AI Features
+
+                </h3>
+
+                <div class="feature">
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Keyword Detection
+
+                </div>
+
+                <div class="feature">
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Tokenization
+
+                </div>
+
+                <div class="feature">
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Stopword Removal
+
+                </div>
+
+                <div class="feature">
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Expense Classification
+
+                </div>
+
+                <div class="feature">
+
+                    <i class="fa-solid fa-check"></i>
+
+                    AI Financial Insight
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+    <!-- ================= FORM ================= -->
+
+    <section class="analyze-section">
+
+        <div class="analysis-container">
+
+            <div class="left-panel">
+
+                <h2>
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                    Transaction Details
+
+                </h2>
+
+                {% if error %}<div class="auth-error">{{ error }}</div>{% endif %}
+                <form method="POST" action="{{ url_for('predict') }}">
+
+                    <div class="input-group">
+
+                        <label>
+
+                            Transaction Description
+
+                        </label>
+
+                        <textarea
+                            name="description"
+                            rows="5"
+                            placeholder="Example : Paid ₹450 to Swiggy for Pizza"></textarea>
+
+                    </div>
+
+                    <div class="double">
+
+                        <div class="input-group">
+
+                            <label>
+
+                                Amount
+
+                            </label>
+
+                            <input
+                                type="number"
+                                name="amount"
+                                placeholder="₹ 0">
+
+                        </div>
+
+                        <div class="input-group">
+
+                            <label>
+
+                                Date
+
+                            </label>
+
+                            <input
+                                type="date"
+                                name="date">
+
+                        </div>
+
+                    </div>
+
+                    <div class="input-group">
+
+                        <label>
+
+                            Merchant (Optional)
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="merchant"
+                            placeholder="Amazon, Swiggy, Uber...">
+
+                    </div>
+
+                    <button class="analyze-btn">
+
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        Analyze Transaction
+
+                    </button>
+
+                </form>
+
+            </div>
+                        <!-- ================= RIGHT PANEL ================= -->
+
+            <div class="right-panel">
+
+                <!-- AI Processing Card -->
+
+                <div class="processing-card">
+
+                    <h2>
+                        <i class="fa-solid fa-robot"></i>
+                        AI Processing
+                    </h2>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Reading Transaction
+                    </div>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Cleaning Text
+                    </div>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Tokenization
+                    </div>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Removing Stop Words
+                    </div>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Detecting Keywords
+                    </div>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Lemmatization
+                    </div>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        TF-IDF Feature Extraction
+                    </div>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Predicting Category
+                    </div>
+
+                    <div class="step">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Generating AI Insight
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= NLP ANALYSIS ================= -->
+
+    <section class="nlp-analysis">
+
+        <h2>NLP Analysis Result</h2>
+
+        <div class="analysis-grid">
+
+            <div class="analysis-box">
+
+                <h4>
+                    <i class="fa-solid fa-file-lines"></i>
+                    Original Text
+                </h4>
+
+                <p>
+                    {{ original_text if original_text else "Enter a transaction above to see NLP analysis." }}
+                </p>
+
+            </div>
+
+
+
+            <div class="analysis-box">
+
+                <h4>
+                    <i class="fa-solid fa-broom"></i>
+                    Cleaned Text
+                </h4>
+
+                <p>
+                    {{ cleaned_text if cleaned_text else "Waiting for transaction..." }}
+                </p>
+
+            </div>
+
+
+
+            <div class="analysis-box">
+
+                <h4>
+                    <i class="fa-solid fa-font"></i>
+                    Tokens
+                </h4>
+
+                <div class="token-area">
+
+                    {% if tokens %}
+
+                        {% for token in tokens %}
+
+                        <span>{{ token }}</span>
+
+                        {% endfor %}
+
+                    {% else %}
+                        <span>Waiting for input</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <div class="analysis-box">
+
+                <h4>
+                    <i class="fa-solid fa-tags"></i>
+                    Keywords
+                </h4>
+
+                <div class="token-area">
+
+                    {% if keywords %}
+
+                        {% for word in keywords %}
+
+                        <span>{{ word }}</span>
+
+                        {% endfor %}
+
+                    {% else %}
+                        <span>TF-IDF keywords appear after analysis</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- ================= RESULT CARDS ================= -->
+
+    <section class="prediction-result">
+
+        <h2>Prediction Result</h2>
+
+        <div class="result-grid">
+
+            <div class="result-card">
+
+                <i class="fa-solid fa-utensils"></i>
+
+                <h3>Category</h3>
+
+                <p>
+
+                    {{ category if category else "Food" }}
+
+                </p>
+
+            </div>
+
+
+
+            <div class="result-card">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <h3>Confidence</h3>
+
+                <p>
+
+                    {{ confidence if confidence else "97%" }}
+
+                </p>
+
+            </div>
+
+
+
+            <div class="result-card">
+
+                <i class="fa-solid fa-store"></i>
+
+                <h3>Merchant</h3>
+
+                <p>
+
+                    {{ merchant if merchant else "Swiggy" }}
+
+                </p>
+
+            </div>
+
+
+
+            <div class="result-card">
+
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+
+                <h3>Amount</h3>
+
+                <p>
+
+                    ₹ {{ amount if amount else "450" }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- ================= CONFIDENCE BAR ================= -->
+
+    <section class="confidence-section">
+
+        <h2>Prediction Confidence</h2>
+
+        <div class="progress-box">
+
+            <div class="progress-bar">
+
+                <div class="progress-fill">
+
+                    {{ confidence if confidence else "97%" }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- ================= AI INSIGHT ================= -->
+
+    <section class="insight-section">
+
+        <div class="insight-card">
+
+            <h2>
+
+                <i class="fa-solid fa-lightbulb"></i>
+
+                AI Financial Insight
+
+            </h2>
+
+            <p>
+
+                {{ insight if insight else
+                "This transaction is categorized as Food because keywords like Swiggy and Pizza are commonly associated with online food delivery platforms. Your food spending appears to be increasing this month. Consider setting a monthly food budget to manage expenses efficiently." }}
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+
+
+    <!-- ================= SAVE BUTTON ================= -->
+
+    <section class="save-section">
+
+    <div class="success-message">
+
+        <i class="fa-solid fa-circle-check"></i>
+
+        Transaction analyzed and saved successfully!
+
+    </div>
+
+</section>
+
+
+
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        © 2026 Smart UPI Expense Categorization System |
+        Flask • Python • NLTK • SQLite
+
+    </footer>
+
+</body>
+
+</html>

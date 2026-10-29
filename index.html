@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart UPI Expense Categorization System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+{% if not session.get('user_id') %}
+<!-- ================= LOGIN / REGISTER ================= -->
+<section class="auth-page">
+    <div class="auth-brand">
+        <div class="logo auth-logo">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Smart UPI</span>
+        </div>
+        <h1>Smart UPI Expense<br><span>Categorization</span> System</h1>
+        <p>Personalized UPI expense analysis using Natural Language Processing, TF-IDF and intelligent category classification.</p>
+
+        <div class="auth-features">
+            <div><i class="fa-solid fa-brain"></i> Advanced NLP Processing</div>
+            <div><i class="fa-solid fa-database"></i> SQLite Database Storage</div>
+            <div><i class="fa-solid fa-chart-pie"></i> Personalized Analytics</div>
+        </div>
+    </div>
+
+    <div class="auth-card">
+        {% if auth_mode == 'register' %}
+            <h2>Create Account</h2>
+            <p class="auth-subtitle">Create your personalized Smart UPI account.</p>
+
+            {% if error %}<div class="auth-error">{{ error }}</div>{% endif %}
+
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="auth-input">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="name" placeholder="Full Name" required>
+                </div>
+                <div class="auth-input">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email Address" required>
+                </div>
+                <div class="auth-input">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password (minimum 6 characters)" required>
+                </div>
+                <button class="auth-btn" type="submit">Create Account</button>
+            </form>
+            <p class="auth-switch">Already have an account? <a href="{{ url_for('home') }}">Login</a></p>
+        {% else %}
+            <h2>Welcome Back 👋</h2>
+            <p class="auth-subtitle">Login to view your personalized expenses.</p>
+
+            {% if error %}<div class="auth-error">{{ error }}</div>{% endif %}
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="auth-input">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email Address" required>
+                </div>
+                <div class="auth-input">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button class="auth-btn" type="submit">Login</button>
+            </form>
+            <p class="demo-login">Demo account: <b>demo@smartupi.com</b> / <b>demo123</b></p>
+            <p class="auth-switch">New user? <a href="{{ url_for('home', mode='register') }}">Create an account</a></p>
+        {% endif %}
+    </div>
+</section>
+
+{% else %}
+<!-- ================= PERSONALIZED HOME ================= -->
+<nav class="navbar">
+    <div class="logo">
+        <i class="fa-solid fa-wallet"></i>
+        <span>Smart UPI</span>
+    </div>
+    <ul>
+        <li><a class="active" href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('analyze') }}">Analyze</a></li>
+        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('categories') }}">Database</a></li>
+        <!--<li><a href="{{ url_for('about') }}">About</a></li>-->
+        <li><a class="logout-link" href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</nav>
+
+<section class="personal-welcome">
+    <div>
+        <p class="tag"><i class="fa-solid fa-user-check"></i> Personalized Finance Workspace</p>
+        <h1>Welcome back, <span>{{ user_name }}</span>! 👋</h1>
+        <p>Your UPI transactions are analyzed and stored securely for your personal expense insights.</p>
+
+        <!-- Personalized NLP + Text-to-Speech Welcome -->
+        <div class="voice-welcome">
+            <i class="fa-solid fa-volume-high"></i>
+            <div>
+                <strong>Smart Voice Welcome</strong>
+                <span id="welcomeText">Hey {{ user_name }}, welcome to Smart UPI!</span>
+            </div>
+            <button type="button" id="speakWelcome" class="voice-btn" title="Play welcome message">
+                <i class="fa-solid fa-play"></i> Speak
+            </button>
+        </div>
+    </div>
+    <a href="{{ url_for('analyze') }}" class="btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Analyze Transaction</a>
+</section>
+
+<section class="hero">
+    <div class="hero-left">
+        <h1>Smart UPI Expense <span>Categorization</span> System</h1>
+        <p>The system uses NLP preprocessing and TF-IDF based text similarity to automatically classify UPI transaction descriptions into Food, Shopping, Travel, Bills, Entertainment and Others.</p>
+        <div class="hero-btn">
+            <a href="{{ url_for('analyze') }}" class="btn">Analyze Transaction</a>
+            <a href="{{ url_for('dashboard') }}" class="btn2">View Dashboard</a>
+        </div>
+    </div>
+
+    <div class="hero-right">
+        <div class="phone">
+            <div class="screen">
+                <h3>Recent Transactions</h3>
+                {% if recent_transactions %}
+                    {% for item in recent_transactions %}
+                    <div class="transaction">
+                        <i class="fa-solid fa-wallet"></i>
+                        <div>
+                            <h4>{{ item.description }}</h4>
+                            <p>{{ item.category }} • {{ item.confidence or 'NLP' }}</p>
+                        </div>
+                        <span>₹{{ item.amount }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="transaction"><i class="fa-solid fa-wallet"></i><div><h4>No Transactions Yet</h4><p>Analyze your first transaction.</p></div></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <h2>Powerful Features</h2>
+    <div class="cards">
+        <div class="card"><i class="fa-solid fa-brain"></i><h3>Advanced NLP</h3><p>Tokenization, stopword removal, lemmatization and TF-IDF feature extraction.</p></div>
+        <div class="card"><i class="fa-solid fa-database"></i><h3>Database Storage</h3><p>Users, transactions and categories are stored in a structured SQLite database.</p></div>
+        <div class="card"><i class="fa-solid fa-user-shield"></i><h3>Personalized</h3><p>Each account sees only its own transactions and financial analytics.</p></div>
+        <div class="card"><i class="fa-solid fa-chart-pie"></i><h3>Expense Analytics</h3><p>View category-wise spending and intelligent financial insights.</p></div>
+    </div>
+</section>
+
+<section class="why">
+    <h2>How the Smart UPI System Works</h2>
+    <div class="why-box">
+        <div><i class="fa-solid fa-user"></i> Login & Personalization</div>
+        <div><i class="fa-solid fa-comment-dots"></i> Enter UPI Description</div>
+        <div><i class="fa-solid fa-filter"></i> NLP Preprocessing</div>
+        <div><i class="fa-solid fa-vector-square"></i> TF-IDF Feature Extraction</div>
+        <div><i class="fa-solid fa-tags"></i> Expense Classification</div>
+        <div><i class="fa-solid fa-database"></i> Save to SQLite</div>
+    </div>
+</section>
+
+<footer>© 2026 Smart UPI Expense Categorization System | Flask • Python • SQLite • NLTK • TF-IDF</footer>
+
+<script>
+// Personalized voice greeting. The user's name comes from the logged-in
+// session and is inserted into a natural-language sentence. The browser's
+// built-in Speech Synthesis API converts that sentence into speech.
+document.addEventListener("DOMContentLoaded", function () {
+    const welcomeText = document.getElementById("welcomeText");
+    const speakButton = document.getElementById("speakWelcome");
+
+    if (!welcomeText || !speakButton || !("speechSynthesis" in window)) {
+        return;
+    }
+
+    const message = welcomeText.textContent.trim();
+
+    function speakWelcome() {
+        window.speechSynthesis.cancel();
+        const speech = new SpeechSynthesisUtterance(message);
+        speech.lang = "en-IN";
+        speech.rate = 0.95;
+        speech.pitch = 1.05;
+        window.speechSynthesis.speak(speech);
+    }
+
+    speakButton.addEventListener("click", speakWelcome);
+
+    // Automatically greet the user after login.
+    setTimeout(speakWelcome, 700);
+});
+</script>
+{% endif %}
+
+</body>
+</html>

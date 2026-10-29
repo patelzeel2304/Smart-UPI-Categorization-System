@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Smart UPI Expense Categorization</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="dashboard-navbar">
+
+    <div class="logo">
+
+        <i class="fa-solid fa-wallet"></i>
+
+        <span>Smart UPI</span>
+
+    </div>
+
+   <!-- <ul>
+
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+
+        <li><a href="{{ url_for('analyze') }}">Analyze</a></li>
+
+        <li><a class="active" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('categories') }}">Database</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>>
+        <li><a class="logout-link" href="{{ url_for('logout') }}">Logout</a></li>
+
+    </ul> -->
+
+     <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('analyze') }}">Analyze</a></li>
+        <li><a class="active" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('categories') }}">Database</a></li>
+        <!--<li><a href="{{ url_for('about') }}">About</a></li>-->
+        <li><a class="logout-link" href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+
+</nav>
+
+
+<!-- ================= HEADER ================= -->
+
+<section class="dashboard-header">
+
+    <div class="header-left">
+
+        <h1>Welcome back, {{ user_name }}! 👋</h1>
+
+        <p>
+
+            Monitor your UPI transactions, visualize spending patterns,
+            and gain intelligent financial insights powered by NLP.
+
+        </p>
+
+    </div>
+
+    <div class="header-right">
+
+        <i class="fa-solid fa-chart-line dashboard-icon"></i>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STATISTICS ================= -->
+
+<section class="stats-container">
+
+    <div class="stat-card">
+
+        <div class="icon-box purple">
+
+            <i class="fa-solid fa-money-bill-wave"></i>
+
+        </div>
+
+        <div>
+
+            <h3>Total Expenses</h3>
+
+            <h2>₹{{ total_expense }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="icon-box blue">
+
+            <i class="fa-solid fa-receipt"></i>
+
+        </div>
+
+        <div>
+
+            <h3>Total Transactions</h3>
+
+            <h2>{{ total_transactions }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="icon-box green">
+
+            <i class="fa-solid fa-chart-pie"></i>
+
+        </div>
+
+        <div>
+
+            <h3>Top Category</h3>
+
+            <h2>{{ top_category }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="icon-box orange">
+
+            <i class="fa-solid fa-lightbulb"></i>
+
+        </div>
+
+        <div>
+
+            <h3>AI Insight</h3>
+
+            <h2>Personalized</h2>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= SUMMARY ================= -->
+
+<section class="summary-box">
+
+    <div class="summary-left">
+
+        <h2>Financial Summary</h2>
+
+        <p>
+
+            This dashboard provides an overview of your spending behaviour.
+            Analyze category-wise expenses, monitor monthly trends,
+            and discover useful financial insights generated using NLP.
+
+        </p>
+
+    </div>
+
+    <div class="summary-right">
+
+        <div class="summary-card">
+
+            <i class="fa-solid fa-arrow-trend-up"></i>
+
+            <h3>Spending Growth</h3>
+
+            <p>Updated Automatically</p>
+
+        </div>
+
+        <div class="summary-card">
+
+            <i class="fa-solid fa-brain"></i>
+
+            <h3>NLP Engine</h3>
+
+            <p>Expense Classification</p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PERIOD & REPORT FILTER ================= -->
+<section class="report-filter-section">
+    <div class="report-filter-header">
+        <div>
+            <h2><i class="fa-solid fa-filter"></i> Transaction Period & Report</h2>
+            <p>Check your transactions month-wise, year-wise, by category, or for a custom date range.</p>
+        </div>
+        <div class="report-actions">
+            <a class="pdf-btn" href="{{ url_for('download_report', period=period, month=month, year=year, start_date=start_date, end_date=end_date, category=category_filter) }}">
+                <i class="fa-solid fa-file-pdf"></i> Download PDF Report
+            </a>
+        </div>
+    </div>
+
+    <form method="GET" action="{{ url_for('dashboard') }}" class="report-filter-form">
+        <div class="filter-field">
+            <label for="period">View By</label>
+            <select name="period" id="period" onchange="toggleReportFields()">
+                <option value="all" {% if period == 'all' %}selected{% endif %}>All Transactions</option>
+                <option value="month" {% if period == 'month' %}selected{% endif %}>Month-wise</option>
+                <option value="year" {% if period == 'year' %}selected{% endif %}>Year-wise</option>
+                <option value="custom" {% if period == 'custom' %}selected{% endif %}>Custom Date Range</option>
+            </select>
+        </div>
+
+        <div class="filter-field" id="monthField">
+            <label for="month">Select Month</label>
+            <input type="month" name="month" id="month" value="{{ month }}">
+        </div>
+
+        <div class="filter-field" id="yearField">
+            <label for="year">Select Year</label>
+            <select name="year" id="year">
+                <option value="">Select Year</option>
+                {% for y in available_years %}
+                    <option value="{{ y }}" {% if year == y %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-field" id="startDateField">
+            <label for="start_date">From Date</label>
+            <input type="date" name="start_date" id="start_date" value="{{ start_date }}">
+        </div>
+
+        <div class="filter-field" id="endDateField">
+            <label for="end_date">To Date</label>
+            <input type="date" name="end_date" id="end_date" value="{{ end_date }}">
+        </div>
+
+        <div class="filter-field">
+            <label for="category">Category</label>
+            <select name="category" id="category">
+                <option value="">All Categories</option>
+                {% for c in categories %}
+                    <option value="{{ c }}" {% if category_filter == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-buttons">
+            <button type="submit" class="apply-filter-btn"><i class="fa-solid fa-magnifying-glass"></i> Apply Filter</button>
+            <a href="{{ url_for('dashboard') }}" class="clear-filter-btn"><i class="fa-solid fa-rotate-left"></i> Reset</a>
+        </div>
+    </form>
+
+    <div class="report-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span><strong>Selected:</strong>
+            {% if period == 'month' and month %}{{ month }}
+            {% elif period == 'year' and year %}{{ year }}
+            {% elif period == 'custom' %}{{ start_date or 'Beginning' }} to {{ end_date or 'Present' }}
+            {% else %}All transactions{% endif %}
+            {% if category_filter %} • {{ category_filter }}{% endif %}
+        </span>
+    </div>
+</section>
+
+<!-- ================= CHART PLACEHOLDERS ================= -->
+
+<section class="chart-section">
+
+    <div class="chart-card">
+
+        <h2>
+
+            <i class="fa-solid fa-chart-pie"></i>
+
+            Expense Distribution
+
+        </h2>
+
+        <canvas id="pieChart"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+        <h2>
+
+            <i class="fa-solid fa-chart-column"></i>
+
+            Category Analysis
+
+        </h2>
+
+        <canvas id="barChart"></canvas>
+
+    </div>
+
+</section>
+<!-- ================= RECENT TRANSACTIONS ================= -->
+
+<section class="recent-section">
+
+    <div class="recent-header">
+
+        <h2>
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            {% if period == 'all' and not category_filter %}Recent Transactions{% else %}Filtered Transactions{% endif %}
+
+        </h2>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Merchant</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+
+                </tr>
+
+            </thead>
+
+           <tbody>
+
+{% if transactions %}
+
+{% for row in transactions %}
+
+<tr>
+
+<td>{{ row.id }}</td>
+
+<td>{{ row.description }}</td>
+
+<td>{{ row.merchant }}</td>
+
+<td>
+
+<span class="category">
+
+{{ row.category }}
+
+</span>
+
+</td>
+
+<td>
+
+₹{{ row.amount }}
+
+</td>
+
+<td>
+
+{{ row.date }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="6" style="text-align:center;padding:30px;">
+
+No Transactions Found
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= AI INSIGHTS ================= -->
+
+<section class="dashboard-insight">
+
+    <div class="insight-box">
+
+        <i class="fa-solid fa-brain"></i>
+
+        <div>
+
+            <h2>AI Financial Insight</h2>
+
+            <p>{{ insight }}</p>
+
+            <small class="gst-help-text">
+                <i class="fa-solid fa-file-invoice"></i>
+                Your filtered transactions can be exported as a PDF expense statement for bookkeeping and GST/tax record preparation.
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= PROGRESS ================= -->
+
+<section class="progress-section">
+    <h2>Expense Distribution</h2>
+    <div class="progress-card">
+        {% if progress_data %}
+            {% for item in progress_data %}
+            <div class="progress-row">
+                <span>{{ item.category }}</span>
+                <div class="progress">
+                    <div class="progress-fill" style="width: {{ item.percentage }}%;">{{ item.percentage }}%</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No expense data available yet. Analyze a transaction to generate your personalized distribution.</p>
+        {% endif %}
+    </div>
+</section>
+
+
+<!-- ================= CHART JS ================= -->
+
+<!-- ================= CHART JS ================= -->
+
+<script>
+function toggleReportFields() {
+    const period = document.getElementById('period').value;
+    document.getElementById('monthField').style.display = period === 'month' ? 'flex' : 'none';
+    document.getElementById('yearField').style.display = period === 'year' ? 'flex' : 'none';
+    document.getElementById('startDateField').style.display = period === 'custom' ? 'flex' : 'none';
+    document.getElementById('endDateField').style.display = period === 'custom' ? 'flex' : 'none';
+}
+
+toggleReportFields();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labels = {{ labels | tojson }};
+const values = {{ values | tojson }};
+
+// ================= PIE CHART =================
+
+const pie = document.getElementById('pieChart');
+
+new Chart(pie, {
+
+    type: 'pie',
+
+    data: {
+
+        labels: labels,
+
+        datasets: [{
+
+            label: "Expense Distribution",
+
+            data: values,
+
+            backgroundColor: [
+
+                "#6C63FF",
+                "#4F8EF7",
+                "#34D399",
+                "#FF9F43",
+                "#F43F5E",
+                "#A855F7",
+                "#06B6D4"
+
+            ],
+
+            borderWidth: 2
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                position: 'bottom'
+
+            }
+
+        }
+
+    }
+
+});
+
+// ================= BAR CHART =================
+
+const bar = document.getElementById('barChart');
+
+new Chart(bar, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: labels,
+
+        datasets: [{
+
+            label: 'Total Expense (₹)',
+
+            data: values,
+
+            backgroundColor: [
+
+                "#6C63FF",
+                "#4F8EF7",
+                "#34D399",
+                "#FF9F43",
+                "#F43F5E",
+                "#A855F7",
+                "#06B6D4"
+
+            ]
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+    <p>
+
+        © 2026 Smart UPI Expense Categorization System
+
+    </p>
+
+    <p>
+
+        Developed using Flask • Python • SQLite • NLTK
+
+    </p>
+
+</footer>
+
+</body>
+
+</html>
